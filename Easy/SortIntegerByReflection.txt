@@ -1,0 +1,42 @@
+Question Link: https://leetcode.com/problems/sort-integers-by-binary-reflection/
+
+
+
+
+
+class Solution {
+    public int[] sortByReflection(int[] nums) {
+
+        Integer[]ans=new Integer[nums.length];  // this is very important.
+        for(int i=0; i<nums.length; i++){
+            ans[i]=nums[i];
+        }
+           Arrays.sort(ans, (a , b) -> {
+           int ra=solve(a);
+            int rb=solve(b);
+            if(ra!=rb){
+                return Integer.compare(ra,rb);
+            }
+            else{
+                return Integer.compare(a,b);
+            } 
+        });
+        int[]temp=new int[ans.length];
+        for(int i=0; i<ans.length; i++){
+            temp[i]=ans[i];
+        }
+        return temp;
+        
+    }
+    public int solve(int num){
+        if(num==0)return 0;
+
+        int rev=0;
+        while(num>0){
+            rev = (rev<<1) | (num&1);
+            num>>=1;
+            
+        }
+        return rev;
+    }
+}
