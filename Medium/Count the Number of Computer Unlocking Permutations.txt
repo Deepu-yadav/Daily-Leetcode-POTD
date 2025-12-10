@@ -1,0 +1,24 @@
+
+
+
+Link:  https://leetcode.com/problems/count-the-number-of-computer-unlocking-permutations/?envType=daily-question&envId=2025-12-10
+
+
+
+class Solution {
+    public int countPermutations(int[] complexity) {
+      long ans=1;  
+      int mod=(int)1e9+7;
+
+      for(int i=1; i<complexity.length; i++){
+        if(complexity[i]<=complexity[0]){
+            return 0;
+        }
+      } 
+      int n=complexity.length;
+      for(int i=1; i<n; i++){
+         ans=(ans*i)%mod;
+      }
+      return (int) ans;
+    }
+}
