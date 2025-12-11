@@ -1,0 +1,45 @@
+
+https://leetcode.com/problems/count-covered-buildings/description/?envType=daily-question&envId=2025-12-11
+
+
+
+
+class Solution {
+    public int countCoveredBuildings(int n, int[][] buildings) {
+        // x -> sorted set of y's in that row
+        Map<Integer, TreeSet<Integer>> rowMap = new HashMap<>();
+        // y -> sorted set of x's in that column
+        Map<Integer, TreeSet<Integer>> colMap = new HashMap<>();
+
+        // populate maps
+        for (int[] b : buildings) {
+            int x = b[0], y = b[1];
+            rowMap.computeIfAbsent(x, k -> new TreeSet<>()).add(y);
+            colMap.computeIfAbsent(y, k -> new TreeSet<>()).add(x);
+        }
+
+        int count = 0;
+
+        // for each building, check existence in four directions
+        for (int[] b : buildings) {
+            int x = b[0], y = b[1];
+
+            TreeSet<Integer> row = rowMap.get(x);
+            TreeSet<Integer> col = colMap.get(y);
+
+            // left and right in the same row (y-axis)
+            Integer left = (row == null) ? null : row.lower(y);
+            Integer right = (row == null) ? null : row.higher(y);
+
+            // up and down in the same column (x-axis)
+            Integer up = (col == null) ? null : col.lower(x);
+            Integer down = (col == null) ? null : col.higher(x);
+
+            if (left != null && right != null && up != null && down != null) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+}
