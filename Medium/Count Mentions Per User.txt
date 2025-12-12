@@ -1,0 +1,63 @@
+
+Link-  https://leetcode.com/problems/count-mentions-per-user/?envType=daily-question&envId=2025-12-12
+
+
+
+
+
+// if its message then you have to mentioned all the users no metters is they are online or offline.
+// return an array of numberOfUsers denoting each user has been mentioned how many times after completion of all events
+
+class Solution {
+    public int[] countMentions(int numberOfUsers, List<List<String>> events) {
+        int[]ans=new int[numberOfUsers];
+
+    Collections.sort(events,(a,b)->{
+        int val1=Integer.parseInt(a.get(1));
+        int val2=Integer.parseInt(b.get(1));
+        if(val1!=val2){
+            return Integer.compare(val1,val2);
+        }
+        else{
+            return b.get(0).compareTo(a.get(0));
+        }
+    });
+    HashMap<Integer,Integer>offline=new HashMap<>();
+
+     for(int i=0; i<events.size(); i++){
+        List<String>list=events.get(i);
+        if(list.get(0).equals("MESSAGE")){
+            // we have three condition here
+              if(list.get(2).indexOf("id")!=-1){
+                String[]parts=list.get(2).split(" ");
+                 for(int j=0; j<parts.length; j++){
+                    int val=Integer.parseInt(parts[j].substring(2));
+                    ans[val]++;
+                 }
+              }
+              else if(list.get(2).equals("ALL")){
+                for(int j=0; j<numberOfUsers; j++)ans[j]++;
+              }
+              else{
+                for(int j=0; j<numberOfUsers; j++){
+                    if(offline.containsKey(j)){
+                        int time=offline.get(j);
+                        int currTime=Integer.parseInt(list.get(1));
+                        if(currTime>=time+60)ans[j]++;
+                    }
+                    else{
+                        ans[j]++;
+                    }
+                }
+
+              }
+        }
+        else{
+            int id=Integer.parseInt(list.get(2));
+            int time=Integer.parseInt(list.get(1));
+            offline.put(id,time);
+        }
+     }
+     return ans;
+    }
+}
