@@ -1,0 +1,30 @@
+
+Link-  https://leetcode.com/problems/number-of-ways-to-divide-a-long-corridor/?envType=daily-question&envId=2025-12-14
+
+
+
+
+
+class Solution {
+    int mod=(int)1e9+7;
+    public int numberOfWays(String corridor) {
+
+      List<Integer>list=new ArrayList<>();
+      for(int i=0;i<corridor.length(); i++){
+        char ch=corridor.charAt(i);
+        if(ch=='S'){
+            list.add(i);
+        }
+      }
+      if(list.size()%2==1 || list.size()==0)return 0;
+       long ans=1;
+       int prevIndex=list.get(1);
+       for(int i=2; i<list.size(); i+=2){
+           int val=list.get(i)-prevIndex;
+           ans=((ans*val)%mod)%mod;
+           prevIndex=list.get(i+1);
+       }
+       return (int)ans;
+
+    }
+}
