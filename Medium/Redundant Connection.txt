@@ -1,0 +1,49 @@
+
+Link:  https://leetcode.com/problems/redundant-connection/description/
+
+
+
+
+
+
+class Solution {
+    public int[] findRedundantConnection(int[][] edges) {
+       int n=edges.length;
+       int[]rank=new int[n+1];  // intuition here is very simple so that we can quickly find the parent node.
+       int[]parent=new int[n+1];
+
+       for(int i=1; i<=n; i++){
+        rank[i]=1;
+        parent[i]=i;
+       }
+         for(int[]arr:edges){
+            int u=arr[0];
+            int v=arr[1];
+            int parent1=find(u,parent);
+            int parent2=find(v,parent);
+            if(parent1==parent2)return new int[]{u,v};
+
+            union(parent1,parent2,parent,rank);
+         }
+         return new int[]{};
+    }
+    public int find(int node,int[]parent){
+        if(node==parent[node]){
+            return node;
+        }
+        return parent[node]=find(parent[node],parent);
+    }
+    public void union(int parent1,int parent2,int[]parent,int[]rank){
+           
+           if(rank[parent1]==rank[parent2]){
+              parent[parent1]=parent2;
+              rank[parent2]++;
+           }
+           else if(rank[parent1]>rank[parent2]){
+             parent[parent2]=parent1;
+           }
+           else{
+             parent[parent1]=parent2;
+           }
+    }
+}
