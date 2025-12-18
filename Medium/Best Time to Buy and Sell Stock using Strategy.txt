@@ -1,0 +1,35 @@
+Link:  https://leetcode.com/problems/best-time-to-buy-and-sell-stock-using-strategy/description/?envType=daily-question&envId=2025-12-18
+
+
+
+
+class Solution {
+    public long maxProfit(int[] prices, int[] strategy, int k) {
+        int n=prices.length;
+        long[]Original=new long[n];
+        long ans=0;
+        long maxFromWindow=0;
+        for(int i=0; i<n; i++){
+         Original[i]=(prices[i]*strategy[i]);
+         ans+=(prices[i]*strategy[i]);
+        }
+        if(k==0)return ans;
+        long originalProfit=0;
+        long modifiedProfit=0;
+        
+        int i=0;
+        for(int j=0; j<n; j++){
+        originalProfit+=Original[j];
+        if((j-i+1)>k/2){
+         modifiedProfit+=prices[j]; 
+        }
+        if((j-i+1)==k){
+          maxFromWindow=Math.max(maxFromWindow,modifiedProfit-originalProfit); 
+           originalProfit-=Original[i];
+            modifiedProfit-=prices[i+(k/2)]; 
+            i++;
+        }
+        }
+        return (ans+maxFromWindow);
+    }
+}
