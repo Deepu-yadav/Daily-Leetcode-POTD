@@ -1,0 +1,88 @@
+
+Link:  https://leetcode.com/problems/accounts-merge/description/
+
+
+
+
+
+class Solution {
+
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+
+        int n = accounts.size();
+        int[] parent = new int[n];
+        int[] rank = new int[n];
+
+        Map<String, Integer> emailToIndex = new HashMap<>();
+        Map<Integer, String> indexToName = new HashMap<>();
+
+        // Initialize DSU and name mapping
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            rank[i] = 1;
+            indexToName.put(i, accounts.get(i).get(0));
+        }
+
+        // Union accounts having common emails
+        for (int i = 0; i < n; i++) {
+            List<String> account = accounts.get(i);
+
+            for (int j = 1; j < account.size(); j++) {
+                String email = account.get(j);
+
+                if (emailToIndex.containsKey(email)) {
+                    int prevIndex = emailToIndex.get(email);
+                    union(find(prevIndex, parent), find(i, parent), parent, rank);
+                } else {
+                    emailToIndex.put(email, i);
+                }
+            }
+        }
+
+        // Group emails by parent
+        Map<Integer, List<String>> groupedEmails = new HashMap<>();
+
+        for (Map.Entry<String, Integer> entry : emailToIndex.entrySet()) {
+            int root = find(entry.getValue(), parent);
+            groupedEmails
+                    .computeIfAbsent(root, k -> new ArrayList<>())
+                    .add(entry.getKey());
+        }
+
+        // Build result
+        List<List<String>> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, List<String>> entry : groupedEmails.entrySet()) {
+            List<String> emails = entry.getValue();
+            Collections.sort(emails);
+
+            List<String> mergedAccount = new ArrayList<>();
+            mergedAccount.add(indexToName.get(entry.getKey()));
+            mergedAccount.addAll(emails);
+
+            result.add(mergedAccount);
+        }
+
+        return result;
+    }
+
+    private int find(int node, int[] parent) {
+        if (node != parent[node]) {
+            parent[node] = find(parent[node], parent);
+        }
+        return parent[node];
+    }
+
+    private void union(int x, int y, int[] parent, int[] rank) {
+        if (x == y) return;
+
+        if (rank[x] > rank[y]) {
+            parent[y] = x;
+        } else if (rank[y] > rank[x]) {
+            parent[x] = y;
+        } else {
+            parent[y] = x;
+            rank[x]++;
+        }
+    }
+}
