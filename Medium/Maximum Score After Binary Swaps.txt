@@ -1,0 +1,22 @@
+
+
+Leetcode Link:  https://leetcode.com/problems/maximum-score-after-binary-swaps/description/
+
+
+
+
+class Solution {
+    public long maximumScore(int[] nums, String s) {
+        long ans=0;
+         long temp=0;
+      PriorityQueue<Integer>max=new PriorityQueue<>(Collections.reverseOrder());
+
+        for(int i=0; i<s.length(); i++){
+           max.add(nums[i]);
+           if(s.charAt(i)=='1'){
+            ans+=max.poll();
+           }
+        }
+        return ans;
+    }
+}
