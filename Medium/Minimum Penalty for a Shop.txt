@@ -1,0 +1,43 @@
+
+
+Link:  https://leetcode.com/problems/minimum-penalty-for-a-shop/description/?envType=daily-question&envId=2025-12-26
+
+
+
+class Solution {
+    public int bestClosingTime(String customers) {
+    int minPenalities=Integer.MAX_VALUE;
+    int n=customers.length();
+    int earliestHour=0;
+     int[]countN=new int[n];
+     int[]countY=new int[n];
+     
+      for(int i=0; i<customers.length(); i++){
+        char ch=customers.charAt(i);
+         if(i>0){
+          countN[i]=countN[i-1];
+          countY[i]=countY[i-1];  
+         }
+         if(ch=='Y'){
+            countY[i]+=1;
+         }
+         else{
+            countN[i]+=1;
+         }
+      }
+
+       for(int i=0; i<customers.length(); i++){
+          int noOfN=i>0?countN[i-1]:0;
+          int noOfY=countY[n-1]-(i>0?countY[i-1]:0);
+          int penalty=noOfN+noOfY;
+          if(minPenalities>penalty){
+            minPenalities=penalty;
+             earliestHour=i;
+          }
+       }
+       if(minPenalities>countN[n-1]){
+         earliestHour=n;
+       }
+       return earliestHour;
+    }
+}
