@@ -1,0 +1,42 @@
+
+Link:  https://leetcode.com/problems/max-area-of-island/description/
+
+
+
+
+
+class Solution {
+    public int maxAreaOfIsland(int[][] grid) {
+        
+    int row=grid.length;
+    int col=grid[0].length;
+    boolean[][]visited=new boolean[row][col];
+        int max=0;
+      for(int i=0; i<row; i++){
+        for(int j=0; j<col; j++){
+            if(grid[i][j]==1 && !visited[i][j]){
+                int count=solve(i,j,visited,grid);
+                max=Math.max(max,count);
+            }
+        }
+      }
+      return max;
+
+    }
+
+    public int solve(int i,int j,boolean[][]visited,int[][]grid){
+
+        if(i<0 || j<0 || i>=grid.length || j>=grid[0].length || visited[i][j] || grid[i][j]==0){
+            return 0;
+        }
+
+        visited[i][j]=true;
+        int left=solve(i,j-1,visited,grid);
+        int right=solve(i,j+1,visited,grid);
+        int up=solve(i-1,j,visited,grid);
+        int down=solve(i+1,j,visited,grid);
+        return 1+left+right+up+down;
+
+
+    }
+}
