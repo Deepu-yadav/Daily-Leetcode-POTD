@@ -1,0 +1,48 @@
+
+
+Link:  https://leetcode.com/problems/magic-squares-in-grid/description/?envType=daily-question&envId=2025-12-30
+
+
+
+class Solution {
+    public int numMagicSquaresInside(int[][] grid) {
+
+     int row=grid.length;
+     int col=grid[0].length;
+     int count=0;
+
+        for(int i=0; i<=row-3; i++){
+        for(int j=0; j<=col-3; j++){
+
+           if(isMagic(i,j,grid)){
+            count++;
+           }  
+        }
+     }
+     return count;   
+    }
+
+
+    public boolean isMagic(int r,int c,int[][]grid){
+
+        Set<Integer>set=new HashSet<>();
+         for(int i=0; i<3; i++){
+         for(int j=0; j<3; j++){
+            int val=grid[r+i][c+j];
+          if(set.contains(val) || val>9 || val<1)return false;
+          set.add(val);
+            }
+        }
+
+        int rowSum=grid[r][c]+grid[r][c+1]+grid[r][c+2];
+
+        for(int i=0; i<3;i++){
+            if((grid[r+i][c]+grid[r+i][c+1]+grid[r+i][c+2])!=rowSum)return false;
+            if((grid[r][c+i]+grid[r+1][c+i]+grid[r+2][c+i])!=rowSum)return false;
+        }
+        int diagonalSum=grid[r][c]+grid[r+1][c+1]+grid[r+2][c+2];
+        int antiDiag=grid[r][c+2]+grid[r+1][c+1]+grid[r+2][c];
+        if(diagonalSum!= rowSum ||  antiDiag!=rowSum)return false;
+        return true;
+    }
+}
