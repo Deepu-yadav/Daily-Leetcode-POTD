@@ -1,0 +1,85 @@
+
+Link:  https://leetcode.com/problems/maximal-rectangle/?envType=daily-question&envId=2026-01-11
+
+
+
+
+class Solution {
+
+    public int[] getNSL(int[]height){
+        int n=height.length;
+        Stack<Integer>st=new Stack<>();
+        int[]NSL=new int[n];
+        NSL[0]=-1;
+        st.push(0);
+
+        for(int i=1; i<n; i++){
+            while(!st.isEmpty() && height[st.peek()]>=height[i]){
+                st.pop();
+            }
+            NSL[i]=st.isEmpty()?-1:st.peek();
+            st.push(i);
+        }
+        return NSL;  
+    }
+
+     public int[] getNSR(int[]height){
+        int n=height.length;
+        Stack<Integer>st=new Stack<>();
+        int[]NSR=new int[n];
+         NSR[n-1]=n;
+        st.push(n-1);
+
+        for(int i=n-2; i>=0; i--){
+            while(!st.isEmpty() && height[st.peek()]>=height[i]){
+                st.pop();
+            }
+            NSR[i]=st.isEmpty()?n:st.peek();
+            st.push(i);
+        }
+        return NSR;  
+    }
+
+
+    public int findMaxArea(int[]height){
+     int n=height.length;
+     int[]NSL=getNSL(height);
+     int[]NSR=getNSR(height);
+     int[]width=new int[height.length];
+
+     for(int i=0;i<n; i++){
+      width[i]=(NSR[i]-NSL[i])-1;
+     }
+        int max=0;
+
+     for(int i=0; i<n; i++){
+    int area=width[i]*height[i];
+        max=Math.max(max,area);
+     }
+     return max;
+
+    }
+    public int maximalRectangle(char[][] matrix) {
+        
+
+        int maxArea=0;
+        int m=matrix.length;
+        int n=matrix[0].length;
+        int[]height=new int[n];
+
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(matrix[i][j]=='0'){
+                    height[j]=0;
+                }
+                else{
+                    height[j]+=1;
+                }
+            }
+            maxArea=Math.max(maxArea,findMaxArea(height));
+        }
+        return maxArea;
+
+
+    }
+}
