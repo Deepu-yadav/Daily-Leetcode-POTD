@@ -1,0 +1,63 @@
+
+Link:  https://leetcode.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold/description/?envType=daily-question&envId=2026-01-19
+
+
+
+
+class Solution {
+    public int maxSideLength(int[][] mat, int threshold) {
+        
+        int m=mat.length;
+        int n=mat[0].length;
+
+       int[][]rowCummSum=new int[m][n];
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                rowCummSum[i][j]=mat[i][j];
+            }
+        }
+
+         // prefixSum for each row.
+        for(int i=0; i<m; i++){
+            for(int j=1; j<n; j++){
+                rowCummSum[i][j]+=rowCummSum[i][j-1];
+            }
+        }
+
+
+
+        int len=Math.min(m,n);
+
+
+        for(int side=len; side>=1; side--){
+           boolean isPossible=false;
+            for(int i=0; (i+side-1)<m; i++){
+            for(int j=0; (j+side-1)<n; j++){
+             
+             if(solve(i,j,(i+side-1),(j+side-1),threshold,rowCummSum)){
+                isPossible=true;
+                break;
+             }
+
+            }
+           }
+            if(isPossible)return side;
+
+        }
+        return 0;
+    }
+
+
+    public boolean solve(int i,int j,int row,int col,int threshold,int[][]rowCummSum){
+
+     int sum=0;
+
+     for(int r=i; r<=row; r++){
+        int s=rowCummSum[r][col]-((j-1)>=0?rowCummSum[r][j-1]:0);
+        sum+=s;
+     }
+
+
+     return sum<=threshold;
+    }
+}
