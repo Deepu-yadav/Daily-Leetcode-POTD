@@ -1,0 +1,33 @@
+class Solution {
+    public int[] lexicographicallySmallestArray(int[] nums, int limit) {
+
+      int[]sorted=Arrays.copyOf(nums,nums.length);
+      Arrays.sort(sorted);
+      HashMap<Integer,List<Integer>>group=new HashMap<>();
+      HashMap<Integer,Integer>groupNumberForEach=new HashMap<>();
+      int groupNum=0;
+      group.computeIfAbsent(groupNum,k->new ArrayList<>()).add(sorted[0]);
+      groupNumberForEach.put(sorted[0],groupNum);
+
+      for(int i=1; i<sorted.length; i++){
+         if(sorted[i]-sorted[i-1]<=limit){
+            group.computeIfAbsent(groupNum,k->new ArrayList<>()).add(sorted[i]);
+            groupNumberForEach.put(sorted[i],groupNum);
+         }
+         else{
+           groupNum++;
+           group.computeIfAbsent(groupNum,k->new ArrayList<>()).add(sorted[i]);
+           groupNumberForEach.put(sorted[i],groupNum);
+
+         }
+      }
+
+      for(int i=0; i<nums.length; i++){
+        int g=groupNumberForEach.get(nums[i]);
+        List<Integer>list=group.get(g);
+        nums[i]=list.get(0);
+        list.remove(0);
+      }
+      return nums;
+    }
+}
